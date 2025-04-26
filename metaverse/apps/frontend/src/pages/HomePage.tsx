@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Navbar } from '../components/Navbar';
 import { Footer } from "../components/Footer";
+import { CreateRoomForm } from '../components/CreateRoomForm'; // Import the new component
 import '../index.css';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { X } from 'lucide-react';
@@ -33,6 +34,7 @@ export const HomePage = () => {
   const [activeTab, setActiveTab] = useState('Recent');
   const [activeSlide, setActiveSlide] = useState(0);
   const [modalOpen, setModalOpen] = useState(false);
+  const [createRoomOpen, setCreateRoomOpen] = useState(false); // New state for CreateRoomForm
   const [selectedSpace, setSelectedSpace] = useState<Space | null>(null);
   
   const carouselSlides: CarouselSlide[] = [
@@ -148,6 +150,14 @@ export const HomePage = () => {
   const closeModal = () => {
     setModalOpen(false);
     setSelectedSpace(null);
+  };
+
+  const openCreateRoomForm = () => {
+    setCreateRoomOpen(true);
+  };
+  
+  const closeCreateRoomForm = () => {
+    setCreateRoomOpen(false);
   };
   
   return (
@@ -271,7 +281,10 @@ export const HomePage = () => {
                 </svg>
                 Enter with Code
               </button>
-              <button className="flex items-center gap-1 bg-blue-600 text-white px-4 py-2 rounded-lg">
+              <button 
+                className="flex items-center gap-1 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+                onClick={openCreateRoomForm} // Open the Create Room form
+              >
                 <span className="text-lg">+</span> Create Space
               </button>
             </div>
@@ -406,6 +419,9 @@ export const HomePage = () => {
           )}
         </DialogContent>
       </Dialog>
+      
+      {/* CreateRoom Form Dialog */}
+      <CreateRoomForm isOpen={createRoomOpen} onClose={closeCreateRoomForm} />
       
       <Footer />
     </div>

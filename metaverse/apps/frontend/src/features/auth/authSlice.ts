@@ -3,8 +3,8 @@ import { jwtDecode } from 'jwt-decode';
 
 interface User {
   name: string;
-  email: string;
-  // Add more fields based on your token payload
+  password: string,
+  type: string
 }
 
 interface AuthState {

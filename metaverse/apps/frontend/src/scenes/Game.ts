@@ -34,31 +34,31 @@ export default class Game extends Phaser.Scene {
     super('game')
   }
 
-  // registerKeys() {
-  //   this.cursors = {
-  //     ...this.input.keyboard.createCursorKeys(),
-  //     ...(this.input.keyboard.addKeys('W,S,A,D') as Keyboard),
-  //   }
+  registerKeys() {
+    this.cursors = {
+      ...this.input.keyboard.createCursorKeys(),
+      ...(this.input.keyboard.addKeys('W,S,A,D') as Keyboard),
+    }
 
-  //   this.keyE = this.input.keyboard.addKey('E')
-  //   this.keyR = this.input.keyboard.addKey('R')
+    this.keyE = this.input.keyboard.addKey('E')
+    this.keyR = this.input.keyboard.addKey('R')
 
-  //   this.input.keyboard.disableGlobalCapture()
-  //   this.input.keyboard.on('keydown-ENTER', () => {
-  //     // store.dispatch(setShowChat(false))
-  //   })
-  //   this.input.keyboard.on('keydown-ESC', () => {
-  //     // store.dispatch(setShowChat(false))
-  //   })
-  // }
+    this.input.keyboard.disableGlobalCapture()
+    this.input.keyboard.on('keydown-ENTER', () => {
+      // store.dispatch(setShowChat(false))
+    })
+    this.input.keyboard.on('keydown-ESC', () => {
+      // store.dispatch(setShowChat(false))
+    })
+  }
 
-  // disableKeys() {
-  //   this.input.keyboard.enabled = false
-  // }
+  disableKeys() {
+    this.input.keyboard.enabled = false
+  }
 
-  // enableKeys() {
-  //   this.input.keyboard.enabled = true
-  // }
+  enableKeys() {
+    this.input.keyboard.enabled = true
+  }
 
   create() {
     // createCharacterAnims(this.anims)

@@ -1,145 +1,109 @@
-import React, { useState } from 'react'
-import { X, Eye, EyeOff } from 'lucide-react'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
+import { useState } from "react"
+import { Eye, EyeOff, X, ArrowLeft } from "lucide-react"
 
-// Assuming we're using the same type from your original implementation
-interface IRoomData {
-  name: string;
-  description: string;
-  password: string | null;
-  autoDispose: boolean;
+interface Props {
+  isOpen: boolean
+  onClose: () => void
 }
 
-interface CreateRoomFormProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
-
-export const CreateRoomForm: React.FC<CreateRoomFormProps> = ({ isOpen, onClose }) => {
-  const [values, setValues] = useState<IRoomData>({
-    name: '',
-    description: '',
-    password: null,
-    autoDispose: true,
+export const CreateRoomForm = ({ isOpen, onClose }: Props) => {
+  const [values, setValues] = useState({
+    name: "",
+    description: "",
+    password: "",
   })
   const [showPassword, setShowPassword] = useState(false)
-  const [nameError, setNameError] = useState("")
-  const [descriptionError, setDescriptionError] = useState("")
-  
-  // You'll need to adapt this to your state management approach
-  // const lobbyJoined = useAppSelector((state) => state.room.lobbyJoined)
-  const lobbyJoined = true; // Placeholder - replace with your actual state
 
-  const handleChange = (prop: keyof IRoomData) => (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setValues({ ...values, [prop]: event.target.value })
-    
-    // Clear errors when user types
-    if (prop === 'name' && nameError) setNameError("")
-    if (prop === 'description' && descriptionError) setDescriptionError("")
+  if (!isOpen) return null
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target
+    setValues((prev) => ({ ...prev, [name]: value }))
   }
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    
-    // Validate inputs
-    let isValid = true
-    
-    if (values.name === '') {
-      setNameError("Name is required")
-      isValid = false
-    }
-    
-    if (values.description === '') {
-      setDescriptionError("Description is required")
-      isValid = false
-    }
-
-    // Submit if valid
-    if (isValid && lobbyJoined) {
-      // Replace this with your actual implementation
-      console.log('Creating room with:', values)
-      
-      // Example of what you might do:
-      // const bootstrap = phaserGame.scene.keys.bootstrap as Bootstrap
-      // bootstrap.network
-      //   .createCustom(values)
-      //   .then(() => bootstrap.launchGame())
-      //   .catch((error) => console.error(error))
-      
-      // Close the dialog
-      onClose()
-    }
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    console.log("Room Created:", values)
+    onClose()
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle className="text-xl font-semibold">Create New Space</DialogTitle>
-          <button 
-            onClick={onClose}
-            className="absolute top-3 right-3 text-gray-500 hover:text-black"
-          >
-            <X className="h-4 w-4" />
-          </button>
-        </DialogHeader>
-        
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="name">Name</Label>
-            <Input
-              id="name"
-              placeholder="Space name"
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      {/* Overlay Background */}
+      <div
+        className="absolute inset-0 bg-black/30 backdrop-blur-[2px]"
+        onClick={onClose}
+        />
+
+      {/* Modal */}
+      <div className="relative z-50 w-[90%] max-w-md bg-[#1e2235] text-white rounded-xl shadow-lg px-6 py-8">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-2">
+            <ArrowLeft className="h-5 w-5 cursor-pointer" onClick={onClose} />
+            <h2 className="text-xl font-bold">Create Custom Room</h2>
+          </div>
+          <X className="h-5 w-5 cursor-pointer" onClick={onClose} />
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Name */}
+          <div>
+            <label className="text-sm font-semibold block mb-1">Name</label>
+            <input
+              name="name"
               value={values.name}
-              onChange={handleChange('name')}
-              className={nameError ? "border-red-500" : ""}
-              autoFocus
+              onChange={handleChange}
+              placeholder="Room name"
+              className="w-full px-3 py-2 rounded-md bg-transparent border border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-400"
+              required
             />
-            {nameError && <p className="text-red-500 text-sm">{nameError}</p>}
           </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
-            <Textarea
-              id="description"
-              placeholder="Describe your space"
+
+          {/* Description */}
+          <div>
+            <label className="text-sm font-semibold block mb-1">Description</label>
+            <textarea
+              name="description"
               value={values.description}
-              onChange={handleChange('description')}
-              className={descriptionError ? "border-red-500" : ""}
-              rows={4}
-            />
-            {descriptionError && <p className="text-red-500 text-sm">{descriptionError}</p>}
+              onChange={handleChange}
+              placeholder="Enter description..."
+              rows={3}
+              className="w-full px-3 py-2 rounded-md bg-transparent border border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-400"
+              required
+            ></textarea>
           </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="password">Password (optional)</Label>
+
+          {/* Password */}
+          <div>
+            <label className="text-sm font-semibold block mb-1">Password (optional)</label>
             <div className="relative">
-              <Input
-                id="password"
-                type={showPassword ? 'text' : 'password'}
+              <input
+                name="password"
+                type={showPassword ? "text" : "password"}
+                value={values.password}
+                onChange={handleChange}
                 placeholder="Leave blank for no password"
-                value={values.password || ''}
-                onChange={handleChange('password')}
+                className="w-full px-3 py-2 pr-10 rounded-md bg-transparent border border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-400"
               />
               <button
                 type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                className="absolute right-2 top-2 text-gray-400 hover:text-white"
+                onClick={() => setShowPassword((prev) => !prev)}
               >
-                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
               </button>
             </div>
           </div>
-          
-          <Button type="submit" className="w-full mt-2 bg-blue-600 hover:bg-blue-700">
-            Create
-          </Button>
+
+          {/* Submit */}
+          <button
+            type="submit"
+            className="w-full bg-teal-400 hover:bg-teal-500 text-black font-bold py-2 rounded-md transition duration-200"
+          >
+            CREATE
+          </button>
         </form>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </div>
   )
 }
