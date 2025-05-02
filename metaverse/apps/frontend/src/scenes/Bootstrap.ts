@@ -6,7 +6,7 @@ import { setRoomJoined } from '../stores/RoomStore'
 
 export default class Bootstrap extends Phaser.Scene {
   private preloadComplete = false
-  network?: Network
+  network!: Network
 
   constructor() {
     super('bootstrap')
@@ -84,7 +84,7 @@ export default class Bootstrap extends Phaser.Scene {
   }
 
   init() {
-    // this.network = new Network()
+    this.network = new Network()
   }
 
   private launchBackground(backgroundMode: BackgroundMode) {
@@ -98,7 +98,7 @@ export default class Bootstrap extends Phaser.Scene {
       });
     }
     
-    this.network?.webRTC?.checkPreviousPermission()
+    this.network.webRTC?.checkPreviousPermission()
     this.scene.launch('game', {
       network: this.network,
     })
